@@ -24,7 +24,4 @@ public class BezeroenKonexioa extends Thread{
         }
     }
 
-    public void gitproba(){
-
-    }
 }
