@@ -23,4 +23,8 @@ public class BezeroenKonexioa extends Thread{
             ioe.printStackTrace();
         }
     }
+
+    public void gitproba(){
+
+    }
 }
