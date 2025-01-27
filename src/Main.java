@@ -6,7 +6,7 @@ public class Main {
     }
 
     public static void main(String[] args){
-        Zerbitzaria zerbitzaria = new Zerbitzaria(5555);
+        Zerbitzaria zerbitzaria = new Zerbitzaria(5555, "192.168.115.188");
 
         try{
             zerbitzaria.hasi();

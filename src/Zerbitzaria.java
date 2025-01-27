@@ -6,10 +6,12 @@ import java.util.ArrayList;
 public class Zerbitzaria {
     private ServerSocket socket;
     private int puerto;
+    private String host;
     private ArrayList<Bezeroa> bezeroak;
 
-    public Zerbitzaria(int puerto) {
+    public Zerbitzaria(int puerto, String host) {
         this.puerto = puerto;
+        this.host = host;
         this.bezeroak = new ArrayList<>();
     }
 
