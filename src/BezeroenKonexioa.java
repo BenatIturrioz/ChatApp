@@ -1,7 +1,7 @@
 import java.io.IOException;
+import java.net.SocketException;
 
-public class BezeroenKonexioa extends Thread{
-
+public class BezeroenKonexioa extends Thread {
     private Bezeroa bezero;
     private Zerbitzaria zerbitzaria;
 
@@ -11,17 +11,23 @@ public class BezeroenKonexioa extends Thread{
     }
 
     public void run() {
-        this.bezero.out.println("Kaixo ongi etorri gure mezularitza zerbitzura!");
+        bezero.out.println("Kaixo, ongi etorri gure mezularitza zerbitzura!");
 
         try {
-            while (this.bezero.konektatutaDago()) {
-                String mezua = this.bezero.in.readLine();
-                // Pasa el cliente actual como remitente
-                this.zerbitzaria.bidaliMezuaDenei(mezua, this.bezero);
+            while (bezero.konektatutaDago()) {
+                String mezua = bezero.in.readLine();
+                if (mezua == null) break; // Cliente se desconectó
+
+                System.out.println("Mensaje recibido: " + mezua);
+                zerbitzaria.bidaliMezuaDenei(mezua, bezero);
             }
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
+        } catch (SocketException e) {
+            System.out.println("Cliente desconectado abruptamente.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            zerbitzaria.kenduBezeroa(bezero);
+            bezero.cerrarConexion();
         }
     }
-
 }

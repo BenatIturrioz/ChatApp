@@ -2,39 +2,53 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class Zerbitzaria {
     private ServerSocket socket;
     private int puerto;
-    private String host;
-    private ArrayList<Bezeroa> bezeroak;
+    private List<Bezeroa> bezeroak;
 
-    public Zerbitzaria(int puerto, String host) {
+    public Zerbitzaria(int puerto) {
         this.puerto = puerto;
-        this.host = host;
         this.bezeroak = new ArrayList<>();
     }
 
     public void hasi() throws IOException {
         this.socket = new ServerSocket(this.puerto);
+        System.out.println("Servidor iniciado en el puerto " + this.puerto);
     }
 
-    public void itxi() throws IOException{
-        this.socket.close();
+    public void itxi() throws IOException {
+        socket.close();
     }
 
-    public boolean konektatuta(){return !this.socket.isClosed();}
-
-    public Socket onartuKonexioa() throws IOException{
-        return this.socket.accept();
+    public boolean konektatuta() {
+        return !socket.isClosed();
     }
 
-    public void geituBezeroa(Bezeroa bezero){this.bezeroak.add(bezero);}
+    public Socket onartuKonexioa() throws IOException {
+        return socket.accept();
+    }
 
-    public void bidaliMezuaDenei(String mezua, Bezeroa bidaltzailea) {
-        for (Bezeroa bezeroa : this.bezeroak) {
-            // No enviar el mensaje al remitente
-            if (bezeroa != bidaltzailea) {
+    public synchronized void geituBezeroa(Bezeroa bezero) {
+        bezeroak.add(bezero);
+        System.out.println("Cliente conectado. Total: " + bezeroak.size());
+    }
+
+    public synchronized void kenduBezeroa(Bezeroa bezero) {
+        bezeroak.remove(bezero);
+        System.out.println("Cliente desconectado. Total: " + bezeroak.size());
+    }
+
+    public synchronized void bidaliMezuaDenei(String mezua, Bezeroa bidaltzailea) {
+        System.out.println("Enviando mensaje a todos los clientes: " + mezua);
+        Iterator<Bezeroa> iterator = bezeroak.iterator();
+
+        while (iterator.hasNext()) {
+            Bezeroa bezeroa = iterator.next();
+            if (bezeroa != bidaltzailea && bezeroa.konektatutaDago()) {
                 bezeroa.out.println(mezua);
             }
         }

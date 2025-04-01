@@ -15,5 +15,17 @@ public class Bezeroa {
         this.out = new PrintWriter(socket.getOutputStream(), true);
     }
 
-    public boolean konektatutaDago(){return !this.socket.isClosed();}
+    public boolean konektatutaDago() {
+        return !socket.isClosed();
+    }
+
+    public void cerrarConexion() {
+        try {
+            if (in != null) in.close();
+            if (out != null) out.close();
+            if (socket != null) socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
